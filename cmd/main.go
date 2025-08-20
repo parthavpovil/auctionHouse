@@ -23,8 +23,10 @@ func main(){
 	h :=handler.NewHandler(db)
 
 	r.POST("/auction",h.AuctionAdd)
+	r.GET("/blockchain/status", h.GetBlockchainStatus)
     
     log.Println("Auction application started!")
+	
 
 	r.Run(":8080")
 

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"auction/blockchain"
 	"context"
 	"fmt"
 
@@ -15,6 +16,7 @@ type Database struct {
 	DB *mongo.Database
 	AuctionCollection *mongo.Collection
 	BidsCollection *mongo.Collection
+	BlockchainClient *blockchain.BlockchainClient
 }
 
 func ConnectMongoDB() (*Database, error){
@@ -46,9 +48,35 @@ func ConnectMongoDB() (*Database, error){
 	  fmt.Println("Created collections",auctionCollection.Name())
 	  fmt.Println("Created collection:",bidsCollection.Name())
 
+	  blockchainClient , err := blockchain.NewBlockchainClient()
+
+	  if err !=nil{
+		fmt.Printf("⚠️  Warning: Could not connect to blockchain: %v\n", err)
+        fmt.Println("🔄 Continuing without blockchain functionality...")
+        
+        return &Database{
+            Client:            client,
+            DB:                db,
+            AuctionCollection: auctionCollection,
+            BidsCollection:    bidsCollection,
+            BlockchainClient:  nil, // No blockchain client
+        }, nil
+
+	  }
+
+	  // Test the blockchain connection
+    err = blockchainClient.TestConnection()
+    if err != nil {
+        fmt.Printf("⚠️  Warning: Blockchain connection test failed: %v\n", err)
+    }
+
+
 	 return &Database{
 		Client: client,
 		DB: db,
+		AuctionCollection: auctionCollection,
+		BidsCollection: bidsCollection,
+		BlockchainClient: blockchainClient,
 	 },nil
 }
 

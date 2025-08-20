@@ -44,3 +44,30 @@ func (h *Handler)AuctionAdd(c *gin.Context){
 		"id":      result.InsertedID,
 	})
 }
+
+func (h *Handler) GetBlockchainStatus(c *gin.Context){
+
+	if h.DB.BlockchainClient == nil{
+		c.JSON(200,gin.H{
+			"blockchain_connected": false,
+            "message": "Blockchain client not initialized",
+		})
+		return
+	}
+
+	blockNumber , err := h.DB.BlockchainClient.Client.BlockNumber(context.Background())
+	if err != nil {
+        c.JSON(500, gin.H{
+            "blockchain_connected": false,
+            "error": err.Error(),
+        })
+        return
+    }
+
+    c.JSON(200, gin.H{
+        "blockchain_connected": true,
+        "chain_id":           h.DB.BlockchainClient.ChainID.String(),
+        "latest_block":       blockNumber,
+        "message":           "Blockchain connection healthy",
+    })
+}
