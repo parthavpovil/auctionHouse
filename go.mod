@@ -2,7 +2,12 @@ module auction
 
 go 1.25.0
 
-require github.com/gin-gonic/gin v1.10.1
+require (
+	github.com/ethereum/go-ethereum v1.16.2
+	github.com/gin-gonic/gin v1.10.1
+	github.com/joho/godotenv v1.5.1
+	go.mongodb.org/mongo-driver v1.17.4
+)
 
 require (
 	github.com/Microsoft/go-winio v0.6.2 // indirect
@@ -18,7 +23,6 @@ require (
 	github.com/deckarep/golang-set/v2 v2.6.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
 	github.com/ethereum/c-kzg-4844/v2 v2.1.0 // indirect
-	github.com/ethereum/go-ethereum v1.16.2 // indirect
 	github.com/ethereum/go-verkle v0.2.2 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -49,7 +53,6 @@ require (
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
-	go.mongodb.org/mongo-driver v1.17.4 // indirect
 	golang.org/x/arch v0.8.0 // indirect
 	golang.org/x/crypto v0.36.0 // indirect
 	golang.org/x/net v0.38.0 // indirect

@@ -25,6 +25,8 @@ func  NewBlockchainClient() (*BlockchainClient , error){
 		rpcURL = "http://localhost:8545"
 	}
 
+	contractAddr :=os.Getenv("CONTRACT_ADDRESS")
+	
 	client , err := ethclient.Dial(rpcURL)
 	   if err != nil {
         return nil, fmt.Errorf("failed to connect to Ethereum client: %v", err)
@@ -36,10 +38,22 @@ func  NewBlockchainClient() (*BlockchainClient , error){
 
 	log.Printf("Connected to blockchain - Chain ID: %v, RPC: %s", chainID, rpcURL)
 
-	return &BlockchainClient{
+	if contractAddr !=""{
+		log.Printf("contract address :%s",contractAddr)
+	}
+	
+	
+
+	bc := &BlockchainClient{
         Client:  client,
         ChainID: chainID,
-    }, nil
+    }
+
+	bc.ContractAddress =common.HexToAddress(contractAddr)
+	
+
+
+	return bc,nil
 
 }
 
