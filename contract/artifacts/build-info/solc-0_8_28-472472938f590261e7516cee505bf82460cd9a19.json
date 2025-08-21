@@ -1,0 +1,35 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-472472938f590261e7516cee505bf82460cd9a19",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "userSourceNameMap": {
+    "contracts/auction.sol": "project/contracts/auction.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/auction.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\ncontract AuctionVault {\n    address public owner;\n\n    // Track balances for each user\n    mapping(address => uint256) public balances;\n\n    // Events for transparency\n    event Deposited(address indexed user, uint256 amount);\n    event Withdrawn(address indexed user, uint256 amount);\n\n    modifier onlyOwner() {\n        require(msg.sender == owner, \"Not authorized\");\n        _;\n    }\n\n    constructor() {\n        owner = msg.sender;\n    }\n\n    // User deposits ETH\n    function deposit() external payable {\n        require(msg.value > 0, \"Deposit must be greater than 0\");\n        balances[msg.sender] += msg.value;\n        emit Deposited(msg.sender, msg.value);\n    }\n\n    // Owner approves and releases funds to a user\n    function approveWithdrawal(address user, uint256 amount) external onlyOwner {\n        require(balances[user] >= amount, \"Insufficient balance\");\n        balances[user] -= amount;\n\n        (bool success, ) = user.call{value: amount}(\"\");\n        require(success, \"Transfer failed\");\n\n        emit Withdrawn(user, amount);\n    }\n\n    // Owner can check contract balance\n    function contractBalance() external view returns (uint256) {\n        return address(this).balance;\n    }\n}\n"
+      }
+    }
+  }
+}
