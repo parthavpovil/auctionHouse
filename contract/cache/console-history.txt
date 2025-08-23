@@ -1,0 +1,8 @@
+await tx.wait();
+const tx = await contract.connect(user1).deposit({value: ethers.parseEther("1.0")});
+// Make a deposit of 1 ETH
+const [owner, user1] = await ethers.getSigners();
+// Get accounts
+const contract = await AuctionVault.attach("0x5FbDB2315678afecb367f032d93F642f64180aa3");
+const AuctionVault = await ethers.getContractFactory("AuctionVault");
+// Get the contract

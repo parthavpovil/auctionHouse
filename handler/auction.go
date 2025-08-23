@@ -4,10 +4,14 @@ import (
 	"auction"
 	"auction/database"
 	"context"
+	"fmt"
 	"log"
+	
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/gin-gonic/gin"
+	
 )
 
 type Handler struct{
@@ -76,4 +80,32 @@ func (h *Handler) GetBlockchainStatus(c *gin.Context){
 	
         "message":           "Blockchain connection healthy",
     })
+}
+
+func (h *Handler) GetUserBalance(c *gin.Context){
+	address :=c.Param("address")
+
+	    if h.DB.BlockchainClient == nil || h.DB.BlockchainClient.AuctionVault == nil {
+        c.JSON(500, gin.H{
+            "error": "Contract not connected",
+        })
+        return
+    }
+
+	userAddress := common.HexToAddress(address)
+
+	balance , err :=h.DB.BlockchainClient.AuctionVault.Balances(nil,userAddress)
+	if err != nil {
+			c.JSON(500, gin.H{
+				"error": fmt.Sprintf("Failed to get balance: %v", err),
+			})
+			return
+		}
+
+	 c.JSON(200, gin.H{
+        "address": address,
+        "balance": balance.String(), // Convert big.Int to string
+        "balance_eth": fmt.Sprintf("%.6f", float64(balance.Int64())/1e18), // Convert wei to ETH
+    })
+
 }

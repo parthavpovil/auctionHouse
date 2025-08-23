@@ -31,6 +31,7 @@ func main(){
 
 	r.POST("/auction",h.AuctionAdd)
 	r.GET("/blockchain/status", h.GetBlockchainStatus)
+	r.GET("/balance/:address", h.GetUserBalance)
     
     log.Println("Auction application started!")
 	
