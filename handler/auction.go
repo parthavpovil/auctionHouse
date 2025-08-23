@@ -64,10 +64,16 @@ func (h *Handler) GetBlockchainStatus(c *gin.Context){
         return
     }
 
+
+	
+
     c.JSON(200, gin.H{
         "blockchain_connected": true,
         "chain_id":           h.DB.BlockchainClient.ChainID.String(),
         "latest_block":       blockNumber,
+		"contract_address":		h.DB.BlockchainClient.ContractAddress.Hex(),
+		"contract_connected":	true,
+	
         "message":           "Blockchain connection healthy",
     })
 }

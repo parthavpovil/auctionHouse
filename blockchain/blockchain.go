@@ -1,6 +1,7 @@
 package blockchain
 
 import (
+	"auction/contracts"
 	"context"
 	"fmt"
 	"log"
@@ -16,6 +17,7 @@ type BlockchainClient struct {
 	Client *ethclient.Client
 	ContractAddress common.Address
 	ChainID *big.Int
+	AuctionVault *contracts.AuctionVault
 
 }
 
@@ -38,9 +40,7 @@ func  NewBlockchainClient() (*BlockchainClient , error){
 
 	log.Printf("Connected to blockchain - Chain ID: %v, RPC: %s", chainID, rpcURL)
 
-	if contractAddr !=""{
-		log.Printf("contract address :%s",contractAddr)
-	}
+	
 	
 	
 
@@ -50,6 +50,21 @@ func  NewBlockchainClient() (*BlockchainClient , error){
     }
 
 	bc.ContractAddress =common.HexToAddress(contractAddr)
+
+	// After setting the contract address, add this:
+	if contractAddr != "" {
+    	bc.ContractAddress = common.HexToAddress(contractAddr)
+		
+		// Create contract instance
+		auctionVault, err := contracts.NewAuctionVault(bc.ContractAddress, client)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create contract instance: %v", err)
+		}
+		bc.AuctionVault = auctionVault
+		
+		log.Printf("contract address: %s", contractAddr)
+		log.Printf("✅ Contract instance created successfully")
+	}
 	
 
 
